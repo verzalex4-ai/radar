@@ -6,7 +6,10 @@ plugins {
 
 android {
     namespace = "com.example.rada_prueba"
-    compileSdk = 34
+
+    // Requerido por geolocator 12+
+    compileSdk = 36
+
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -20,18 +23,25 @@ android {
 
     defaultConfig {
         applicationId = "com.example.rada_prueba"
-        minSdk = 23  // Aumentado para soportar mejor los permisos de ubicación
-        targetSdk = 34
+
+        // Geolocator y permisos modernos
+        minSdk = flutter.minSdkVersion
+
+        targetSdk = 36
+
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        
-        // Configuración para Nearby Connections
+
         multiDexEnabled = true
     }
 
     buildTypes {
         release {
+            // ⚠️ Para producción después deberías usar tu keystore
             signingConfig = signingConfigs.getByName("debug")
+
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
     }
 }
@@ -41,5 +51,5 @@ flutter {
 }
 
 dependencies {
-    // Dependencias adicionales si son necesarias
+    // No hace falta agregar nada manual
 }
