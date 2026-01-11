@@ -183,13 +183,35 @@ class _RadarScreenState extends State<RadarScreen>
     });
   }
 
+  // Reemplaza el método _startBroadcasting() en tu main.dart
+
   Future<void> _startBroadcasting() async {
-    if (_currentUser == null) return;
+    if (_currentUser == null) {
+      print('⚠️ No hay usuario actual para broadcast');
+      return;
+    }
 
-    setState(() => _isScanning = true);
+    print('🚀 Iniciando servicio de broadcast...');
 
-    await _broadcastService.startAdvertising(_userName ?? 'Usuario');
-    await _broadcastService.startDiscovery();
+    bool success = await _broadcastService.start(_userName ?? 'Usuario');
+
+    setState(() => _isScanning = success);
+
+    if (!success) {
+      // Mostrar mensaje de error al usuario
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error al iniciar escaneo. Verifica los permisos.'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+      return;
+    }
+
+    print('✅ Servicio de broadcast iniciado correctamente');
 
     _nearbyUsersSubscription = _broadcastService.nearbyUsersStream.listen((
       users,
@@ -205,6 +227,8 @@ class _RadarScreenState extends State<RadarScreen>
           return distance <= _radarRadius && user.id != _currentUser!.id;
         }).toList();
       });
+
+      print('👥 Usuarios detectados: ${_nearbyUsers.length}');
     });
   }
 

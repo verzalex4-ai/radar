@@ -7,7 +7,8 @@ plugins {
 android {
     namespace = "com.example.rada_prueba"
 
-    // Requerido por geolocator 12+
+    // Compatible con Android 8.0+ (API 26+)
+    // Necesario para nearby_connections y permisos modernos
     compileSdk = 36
 
     ndkVersion = flutter.ndkVersion
@@ -24,8 +25,9 @@ android {
     defaultConfig {
         applicationId = "com.example.rada_prueba"
 
-        // Geolocator y permisos modernos
-        minSdk = flutter.minSdkVersion
+        // Android 8.0 Oreo como mínimo
+        // nearby_connections requiere mínimo API 23, pero para mejor compatibilidad usamos 26
+        minSdk = 26
 
         targetSdk = 36
 
@@ -37,7 +39,8 @@ android {
 
     buildTypes {
         release {
-            // ⚠️ Para producción después deberías usar tu keystore
+            // ⚠️ IMPORTANTE: Para producción debes crear y usar tu propio keystore
+            // Por ahora usa el keystore de debug para testing
             signingConfig = signingConfigs.getByName("debug")
 
             isMinifyEnabled = false
@@ -51,5 +54,6 @@ flutter {
 }
 
 dependencies {
-    // No hace falta agregar nada manual
+    // No necesitas agregar dependencias manualmente
+    // Flutter las maneja automáticamente desde pubspec.yaml
 }
